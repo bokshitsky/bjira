@@ -3,6 +3,9 @@
 .vscode
 .venv
 .DS_Store
+dist/*
+build/*
+bjira.egg-info/*
 
 *.iml
 *.ipynb
