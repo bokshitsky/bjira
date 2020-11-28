@@ -5,7 +5,7 @@ from getpass import getpass
 
 import keyring
 
-from bjira.utils import get_jira_api, get_task_url, get_user, get_team, get_config, JIRA_SERVICE
+from bjira.utils import get_jira_api, get_task_url, get_user, get_team, get_config, JIRA_SERVICE, DEFENSE_TEXT
 
 
 def _get_issue_type(args):
@@ -31,8 +31,8 @@ def _get_task_message(args):
     return _get_prefix(args) + args.message
 
 
-def _parse_portfolio_task(args):
-    return 'PORTFOLIO-' + re.sub('[^0-9]', '', args.portfolio)
+def _parse_portfolio_task(portfolio):
+    return 'PORTFOLIO-' + re.sub('[^0-9]', '', portfolio)
 
 
 def _create_new_task(args):
@@ -53,7 +53,7 @@ def _create_new_task(args):
     print(get_task_url(task.key))
 
     if args.portfolio:
-        portfolio_key = _parse_portfolio_task(args)
+        portfolio_key = _parse_portfolio_task(args.portfolio)
         jira_api.create_issue_link(
             type='Inclusion',
             inwardIssue=portfolio_key,
@@ -73,6 +73,13 @@ def _set_password(args):
         print('bad password')
 
 
+def _fill_defense_galochka(args):
+    jira_api = get_jira_api()
+    issue = jira_api.issue(_parse_portfolio_task(args.portfolio[0]))
+    print(f'fill "ya proveril bezopasnost" galochka for {get_task_url(issue.key)}')
+    issue.update(fields={'customfield_32210': [{'value': DEFENSE_TEXT}]})
+
+
 def _parse_args():
     parser = argparse.ArgumentParser(description='Create jira.hh.ru tasks and optionally link to portfolio')
     subparsers = parser.add_subparsers(help='sub-command help', required=True)
@@ -88,6 +95,11 @@ def _parse_args():
 
     parser_setpass = subparsers.add_parser('setpass', help='set jira password')
     parser_setpass.set_defaults(func=_set_password)
+
+    for short_name in ('stas', 'defense'):
+        parser_defense = subparsers.add_parser(short_name, help='fill portfolio defense galochka')
+        parser_defense.add_argument(dest='portfolio', help='portfolio', nargs=1)
+        parser_defense.set_defaults(func=_fill_defense_galochka)
 
     return parser.parse_args()
 

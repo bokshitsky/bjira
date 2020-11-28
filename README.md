@@ -49,4 +49,8 @@
 ~ » bjira create bg -m 'NEW BUG NAME'                       # bug-задача "NEW TASK NAME"
 
 ~ » bjira create bug -m -s xmlback 'NEW BUG NAME'           # bug-задача "[xmlback] NEW TASK NAME"
+
+~ » bjira stas 11215              # Заполнить галочку про безопасность в PORTFOLIO-11215
+
+~ » bjira stas P11215             # Заполнить галочку про безопасность в PORTFOLIO-11215
 ```

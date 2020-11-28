@@ -6,6 +6,9 @@ from jira import JIRA
 
 JIRA_SERVICE = 'bjira'
 
+DEFENSE_TEXT = 'Я проверил портфель на безопасность по "Чеклисту", портфель не несет рисков или согласован с ' \
+               'командой Defense.'
+
 _config_json = None
 
 
