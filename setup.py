@@ -4,7 +4,7 @@ from setuptools import find_packages, setup
 
 setup(
     name='bjira',
-    version='0.0.3',
+    version='0.0.4',
     description='CLI utils for hh jira',
     author='Evgeniy Bokshitskiy',
     author_email='e.bokshitskiy@hh.ru',
