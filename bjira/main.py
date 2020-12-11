@@ -2,6 +2,7 @@
 import argparse
 
 from bjira.operations.create import CreateJiraTask
+from bjira.operations.open import OpenJiraTask
 from bjira.operations.my import ShowMyTasks
 from bjira.operations.setpass import SetPasswordTask
 from bjira.operations.stas import FillDefenseGalochkaTask
@@ -12,6 +13,7 @@ def _parse_args():
     subparsers = parser.add_subparsers(help='sub-command help', required=True)
 
     for task in (CreateJiraTask,
+                 OpenJiraTask,
                  SetPasswordTask,
                  FillDefenseGalochkaTask,
                  ShowMyTasks):
