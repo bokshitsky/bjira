@@ -4,14 +4,14 @@ import git
 from bjira.operations import BJiraOperation
 
 
-class OpenJiraTask(BJiraOperation):
+class ViewJiraTask(BJiraOperation):
 
     def configure_arg_parser(self, subparsers):
-        parser = subparsers.add_parser('open', help='open jira task')
+        parser = subparsers.add_parser('view', help='view jira task in browser')
         parser.add_argument(dest='task_name', nargs='?', help='task name')
-        parser.set_defaults(func=self._open_jira_task)
+        parser.set_defaults(func=self._view_jira_task)
 
-    def _open_jira_task(self, args):
+    def _view_jira_task(self, args):
         task_name = args.task_name
         if task_name is None:
             try:
