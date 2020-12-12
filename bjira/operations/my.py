@@ -5,7 +5,7 @@ class ShowMyTasks(BJiraOperation):
 
     def configure_arg_parser(self, subparsers):
         parser = subparsers.add_parser('my', help='show my tasks')
-        parser.add_argument('-l', dest='limit', type=int, default=10, help='limit')
+        parser.add_argument(dest='limit', type=int, default=10, help='limit', nargs='?')
         parser.set_defaults(func=self._execute_search)
 
     def _execute_search(self, args):

@@ -50,6 +50,10 @@
 
 ~ » bjira create bug -m -s xmlback 'NEW BUG NAME'           # bug-задача "[xmlback] NEW TASK NAME"
 
+~ » bjira my                 # Показать последние задачи связанные со мной
+
+~ » bjira my 15              # Показать последние 15 задач связанных со мной
+
 ~ » bjira stas 11215              # Заполнить галочку про безопасность в PORTFOLIO-11215
 
 ~ » bjira stas P11215             # Заполнить галочку про безопасность в PORTFOLIO-11215

@@ -1,16 +1,18 @@
 from bjira.operations import BJiraOperation
 from bjira.utils import parse_portfolio_task
 
+TASK_MAPPING = {
+    'bg': '330',
+    'bug': '330',
 
-def _get_issue_type(args):
-    return {
-        'bg': 'Production Bug',
-        'bug': 'Production Bug',
+    'at': '348',
 
-        'at': 'Autotesting Task',
+    'hh': '3',
+}
 
-        'hh': 'Задача'
-    }.get(args.task_type, 'Задача')
+
+def _get_issue_id(args):
+    return TASK_MAPPING.get(args.task_type.lower())
 
 
 def _get_prefix(args):
@@ -30,7 +32,7 @@ class CreateJiraTask(BJiraOperation):
     def configure_arg_parser(self, subparsers):
         parser = subparsers.add_parser('create', help='create jira task')
         parser.add_argument(dest='task_type', default='hh', help='task type', nargs='?',
-                            choices=('hh', 'at', 'test', 'bg', 'bag'))
+                            choices=tuple(TASK_MAPPING.keys()))
         parser.add_argument('-s', dest='service', default=None,
                             help='task service - used for [{task service} prefix only')
         parser.add_argument('-p', dest='portfolio', default=None, help='[optional] portfolio to link')
@@ -46,7 +48,7 @@ class CreateJiraTask(BJiraOperation):
             prefetch=True,
             fields={
                 'project': 'HH',
-                'issuetype': {'name': _get_issue_type(args)},
+                'issuetype': {'id': _get_issue_id(args)},
                 'assignee': {'name': self.get_user()},
                 'summary': task_message,
                 'customfield_10961': {'value': self.get_team()}  # Development team
