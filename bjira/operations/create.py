@@ -37,6 +37,7 @@ class CreateJiraTask(BJiraOperation):
                             help='task service - used for [{task service} prefix only')
         parser.add_argument('-p', dest='portfolio', default=None, help='[optional] portfolio to link')
         parser.add_argument('-m', dest='message', required=True, help='task name')
+        parser.add_argument('-sp', dest='sp', default=None, help='task storypoints, example: 0.5')
         parser.set_defaults(func=self._create_new_task)
 
     def _create_new_task(self, args):
@@ -51,7 +52,8 @@ class CreateJiraTask(BJiraOperation):
                 'issuetype': {'id': _get_issue_id(args)},
                 'assignee': {'name': self.get_user()},
                 'summary': task_message,
-                'customfield_10961': {'value': self.get_team()}  # Development team
+                'customfield_10961': {'value': self.get_team()},  # Development team
+                'customfield_11212': float(args.sp) if args.sp else None,  # Story Points
             }
         )
         print(self.get_task_url(task.key))
