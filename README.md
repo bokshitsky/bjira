@@ -5,33 +5,37 @@
 
 1. Склонировать репу.
 
-2. Установить тулзу:
+2. Установить venv и зависимости:
 
 ```shell script
-~ » python3 setup.py install
+sudo rm -rf .venv
+python3 -m venv `pwd`/.venv
+source ./.venv/bin/activate
+sudo python -m pip install -r requirements.txt
+deactivate
 ```
 
-3. В home-папку положить файл с конфигом со своими данными:
-
+3. Прописать alias в .bashrc / .zshrc
 ```shell script
-~ » cat .bjira_config
+echo 'alias bjira="'`pwd`'/.venv/bin/python '`pwd`'/run.py"' >> ~/.zshrc
 ```
 
-```json5
+4. Добавить файл .bjira_config в home папку
+```   
 {
-  "host": "https://jira.hh.ru",
-  "user": "user-name",
-  "team": "team-name"
+    "host": "https://jira.hh.ru",
+    "user": "твоё.имя",
+    "team": "mobi-dick"
 }
 ```
 
-4. Установить пароль
+5. Установить пароль
 
 ```shell script
 ~ » bjira setpass
 ```
 
-5. Использовать
+6. Использовать
 
 ```shell script
 ~ » bjira create -s 'xmlback' -m 'NEW TASK NAME'            # HH задача "[xmlback] NEW TASK NAME"
