@@ -1,6 +1,8 @@
 from bjira.operations import BJiraOperation
 from bjira.utils import parse_portfolio_task
 
+HH_PROJECT_ID = 'HH'
+
 TASK_MAPPING = {
     'bg': '330',
     'bug': '330',
@@ -8,7 +10,22 @@ TASK_MAPPING = {
     'at': '348',
 
     'hh': '3',
+
+    'dwh': '3',
 }
+
+PROJ_MAPPING = {
+    'bg': HH_PROJECT_ID,
+    'bug': HH_PROJECT_ID,
+    'at': HH_PROJECT_ID,
+    'hh': HH_PROJECT_ID,
+
+    'dwh': 'DWH',
+}
+
+
+def _get_proj_id(args):
+    return PROJ_MAPPING.get(args.task_type.lower())
 
 
 def _get_issue_id(args):
@@ -45,16 +62,20 @@ class CreateJiraTask(BJiraOperation):
         print(f'creating task "{task_message}"')
 
         jira_api = self.get_jira_api()
+        proj_id = _get_proj_id(args)
+        fields = {
+            'project': proj_id,
+            'issuetype': {'id': _get_issue_id(args)},
+            'assignee': {'name': self.get_user()},
+            'summary': task_message,
+        }
+        if proj_id == HH_PROJECT_ID:
+            fields['customfield_10961'] = {'value': self.get_team()}  # Development team
+            fields['customfield_11212']: float(args.sp) if args.sp else None  # Story Points
+
         task = jira_api.create_issue(
             prefetch=True,
-            fields={
-                'project': 'HH',
-                'issuetype': {'id': _get_issue_id(args)},
-                'assignee': {'name': self.get_user()},
-                'summary': task_message,
-                'customfield_10961': {'value': self.get_team()},  # Development team
-                'customfield_11212': float(args.sp) if args.sp else None,  # Story Points
-            }
+            fields=fields
         )
         print(self.get_task_url(task.key))
 
