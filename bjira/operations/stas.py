@@ -5,7 +5,7 @@ DEFENSE_TEXT = 'Я проверил портфель на безопасност
                'командой Defense.'
 
 
-class FillDefenseGalochkaTask(BJiraOperation):
+class Operation(BJiraOperation):
 
     def configure_arg_parser(self, subparsers):
         for short_name in ('stas', 'defense'):

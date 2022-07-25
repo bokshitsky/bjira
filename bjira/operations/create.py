@@ -44,7 +44,7 @@ def _get_task_message(args):
     return _get_prefix(args) + args.message
 
 
-class CreateJiraTask(BJiraOperation):
+class Operation(BJiraOperation):
 
     def configure_arg_parser(self, subparsers):
         parser = subparsers.add_parser('create', help='create jira task')

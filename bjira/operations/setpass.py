@@ -6,7 +6,7 @@ from bjira.operations import BJiraOperation
 from bjira.utils import JIRA_SERVICE
 
 
-class SetPasswordTask(BJiraOperation):
+class Operation(BJiraOperation):
 
     def configure_arg_parser(self, subparsers):
         parser_setpass = subparsers.add_parser('setpass', help='set jira password')

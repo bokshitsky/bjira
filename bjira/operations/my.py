@@ -1,7 +1,7 @@
 from bjira.operations import BJiraOperation
 
 
-class ShowMyTasks(BJiraOperation):
+class Operation(BJiraOperation):
 
     def configure_arg_parser(self, subparsers):
         parser = subparsers.add_parser('my', help='show my tasks')

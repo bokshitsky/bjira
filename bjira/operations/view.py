@@ -5,7 +5,7 @@ import git
 from bjira.operations import BJiraOperation
 
 
-class ViewJiraTask(BJiraOperation):
+class Operation(BJiraOperation):
 
     def configure_arg_parser(self, subparsers):
         parser = subparsers.add_parser('view', help='view jira task in browser')

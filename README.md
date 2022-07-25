@@ -5,7 +5,7 @@
 
 1. Склонировать репу.
 
-2. (Установить poetry)[https://python-poetry.org/docs/]
+2. [Установить poetry](https://python-poetry.org/docs/)
 
 3. Установить venv и зависимости:
 
