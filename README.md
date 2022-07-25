@@ -5,37 +5,39 @@
 
 1. Склонировать репу.
 
-2. Установить venv и зависимости:
+2. (Установить poetry)[https://python-poetry.org/docs/]
+
+3. Установить venv и зависимости:
 
 ```shell script
-sudo rm -rf .venv
-python3 -m venv `pwd`/.venv
-source ./.venv/bin/activate
-sudo python -m pip install -r requirements.txt
-deactivate
+poetry install
 ```
 
-3. Прописать alias в .bashrc / .zshrc
+4. Прописать alias в .bashrc / .zshrc:
+
 ```shell script
-echo 'alias bjira="'`pwd`'/.venv/bin/python '`pwd`'/run.py"' >> ~/.zshrc
+echo 'alias bjira="'`poetry env info -p`'/bin/bjira"' >> ~/.zshrc
 ```
 
-4. Добавить файл .bjira_config в home папку
-```   
+5. Добавить файл .bjira_config в home папку:
+
+```shell script
+cat <<EOF > ~/.bjira_config
 {
     "host": "https://jira.hh.ru",
     "user": "твоё.имя",
     "team": "mobi-dick"
 }
+EOF
 ```
 
-5. Установить пароль
+6. Установить пароль:
 
 ```shell script
 ~ » bjira setpass
 ```
 
-6. Использовать
+7. Использовать:
 
 ```shell script
 ~ » bjira create -s 'xmlback' -m 'NEW TASK NAME'            # HH задача "[xmlback] NEW TASK NAME"

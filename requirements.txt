@@ -1,3 +1,0 @@
-keyring==23.2.1
-jira==2.0.0
-GitPython>=3.1.11
