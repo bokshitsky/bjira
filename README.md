@@ -44,6 +44,8 @@ EOF
 
 ~ » bjira create -m 'NEW TASK NAME'                         # HH задача "NEW TASK NAME"
 
+~ » bjira create -m 'NEW TASK NAME' -d 'description'        # HH задача "NEW TASK NAME" с описанием "description"
+
 ~ » bjira create -p 12345 -s 'xmlback' -m 'NEW TASK NAME' -sp 0.5   # HH задача "[xmlback] NEW TASK NAME" на 0.5sp прилинкованная к PORTFOLIO-12345
 
 ~ » bjira create at -m 'NEW TASK NAME'                      # AT задача "[at] NEW TASK NAME"
@@ -59,6 +61,10 @@ EOF
 ~ » bjira my                 # Показать последние задачи связанные со мной
 
 ~ » bjira my 15              # Показать последние 15 задач связанных со мной
+
+~ » bjira myteam             # Показать последние задачи связанные с моей командой
+
+~ » bjira myteam 15          # Показать последние 15 задач связанных с моей командой
 
 ~ » bjira stas 11215              # Заполнить галочку про безопасность в PORTFOLIO-11215
 

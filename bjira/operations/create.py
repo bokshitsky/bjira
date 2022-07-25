@@ -53,6 +53,7 @@ class Operation(BJiraOperation):
         parser.add_argument('-s', dest='service', default=None,
                             help='task service - used for [{task service} prefix only')
         parser.add_argument('-p', dest='portfolio', default=None, help='[optional] portfolio to link')
+        parser.add_argument('-d', dest='description', default=None, help='[optional] task description')
         parser.add_argument('-m', dest='message', required=True, help='task name')
         parser.add_argument('-sp', dest='sp', default=None, help='task storypoints, example: 0.5')
         parser.set_defaults(func=self._create_new_task)
@@ -69,6 +70,9 @@ class Operation(BJiraOperation):
             'assignee': {'name': self.get_user()},
             'summary': task_message,
         }
+        if args.description:
+            fields['description'] = args.description
+
         if proj_id == HH_PROJECT_ID:
             fields['customfield_10961'] = {'value': self.get_team()}  # Development team
             fields['customfield_11212']: float(args.sp) if args.sp else None  # Story Points
