@@ -2,6 +2,7 @@ from bjira.operations import BJiraOperation
 from bjira.utils import parse_portfolio_task
 
 HH_PROJECT_ID = 'HH'
+MARK_AS_NOT_AUTOTESTING_TRANSITION = '1211'
 
 TASK_MAPPING = {
     'bg': ('330', HH_PROJECT_ID),
@@ -88,3 +89,10 @@ class Operation(BJiraOperation):
                 outwardIssue=task.key
             )
             print(f'linked {self.get_task_url(task.key)} to {self.get_task_url(portfolio_key)}')
+
+        if args.task_type == 'release':
+            jira_api.transition_issue(
+                issue=task.key,
+                transition=MARK_AS_NOT_AUTOTESTING_TRANSITION
+            )
+            jira_api.assign_issue(issue=task.key, assignee='expsvc_jira')
