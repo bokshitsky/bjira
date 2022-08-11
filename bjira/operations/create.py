@@ -4,31 +4,15 @@ from bjira.utils import parse_portfolio_task
 HH_PROJECT_ID = 'HH'
 
 TASK_MAPPING = {
-    'bg': '330',
-    'bug': '330',
-
-    'at': '348',
-
-    'hh': '3',
-
-    'dwh': '3',
+    'bg': ('330', HH_PROJECT_ID),
+    'bug': ('330', HH_PROJECT_ID),
+    'at': ('348', HH_PROJECT_ID),
+    'hh': ('3', HH_PROJECT_ID),
+    'dwh': ('3', 'DWH'),
+    'release': ('182', 'EXP')
 }
 
-PROJ_MAPPING = {
-    'bg': HH_PROJECT_ID,
-    'bug': HH_PROJECT_ID,
-    'at': HH_PROJECT_ID,
-    'hh': HH_PROJECT_ID,
-
-    'dwh': 'DWH',
-}
-
-
-def _get_proj_id(args):
-    return PROJ_MAPPING.get(args.task_type.lower())
-
-
-def _get_issue_id(args):
+def _get_project_issue_type(args):
     return TASK_MAPPING.get(args.task_type.lower())
 
 
@@ -41,6 +25,8 @@ def _get_prefix(args):
 
 
 def _get_task_message(args):
+    if args.task_type == 'release':
+        return f'{args.service}={args.version}'
     return _get_prefix(args) + args.message
 
 
@@ -54,19 +40,27 @@ class Operation(BJiraOperation):
                             help='task service - used for [{task service} prefix only')
         parser.add_argument('-p', dest='portfolio', default=None, help='[optional] portfolio to link')
         parser.add_argument('-d', dest='description', default=None, help='[optional] task description')
-        parser.add_argument('-m', dest='message', required=True, help='task name')
+        parser.add_argument('-v', dest='version', default=None, help='release version, required for release tasks')
+        parser.add_argument('-m', dest='message', default=None, help='task name')
         parser.add_argument('-sp', dest='sp', default=None, help='task storypoints, example: 0.5')
         parser.set_defaults(func=self._create_new_task)
 
     def _create_new_task(self, args):
+        assert (
+           args.task_type == "release"
+           and args.service is not None
+           and args.version is not None
+        ) or args.message is not None
+
         task_message = _get_task_message(args)
         print(f'creating task "{task_message}"')
 
         jira_api = self.get_jira_api()
-        proj_id = _get_proj_id(args)
+        issue_type, proj_id = _get_project_issue_type(args)
+
         fields = {
             'project': proj_id,
-            'issuetype': {'id': _get_issue_id(args)},
+            'issuetype': {'id': issue_type},
             'assignee': {'name': self.get_user()},
             'summary': task_message,
         }
@@ -75,7 +69,10 @@ class Operation(BJiraOperation):
 
         if proj_id == HH_PROJECT_ID:
             fields['customfield_10961'] = {'value': self.get_team()}  # Development team
-            fields['customfield_11212']: float(args.sp) if args.sp else None  # Story Points
+            fields['customfield_11212'] = float(args.sp) if args.sp else None  # Story Points
+
+        if args.task_type == 'release':
+            fields['customfield_28411'] = f'{args.service}: {args.version}'  # Application
 
         task = jira_api.create_issue(
             prefetch=True,

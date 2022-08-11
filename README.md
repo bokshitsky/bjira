@@ -58,6 +58,8 @@ EOF
 
 ~ » bjira create bug -m -s xmlback 'NEW BUG NAME'           # bug-задача "[xmlback] NEW TASK NAME"
 
+- » bjira create release -s 'jager-experience-indexer' -v '1.0.0'   # EXP задача "jager-experience-indexer=1.0.0"
+
 ~ » bjira my                 # Показать последние задачи связанные со мной
 
 ~ » bjira my 15              # Показать последние 15 задач связанных со мной
