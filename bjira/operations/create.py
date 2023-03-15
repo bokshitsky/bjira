@@ -96,3 +96,11 @@ class Operation(BJiraOperation):
                 transition=MARK_AS_NOT_AUTOTESTING_TRANSITION
             )
             jira_api.assign_issue(issue=task.key, assignee='expsvc_jira')
+
+        return CreateResult(task)
+
+
+class CreateResult:
+
+    def __init__(self, task):
+        self.task = task

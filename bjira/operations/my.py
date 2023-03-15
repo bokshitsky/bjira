@@ -16,3 +16,11 @@ class Operation(BJiraOperation):
         max_len = max(len(issue.permalink()) for issue in found_issues)
         for issue in found_issues:
             print(f'{issue.permalink().ljust(max_len)} {issue.fields.summary[:80]}')
+
+        return MyResult(found_issues)
+
+
+class MyResult:
+
+    def __init__(self, found_issues):
+        self.found_issues = found_issues
