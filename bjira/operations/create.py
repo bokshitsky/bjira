@@ -69,7 +69,9 @@ class Operation(BJiraOperation):
             fields['description'] = args.description
 
         if proj_id == HH_PROJECT_ID:
-            fields['customfield_10961'] = {'value': self.get_team()}  # Development team
+            team = self.get_team()
+            if team is not None:
+                fields['customfield_10961'] = {'value': team}  # Development team
             fields['customfield_11212'] = float(args.sp) if args.sp else None  # Story Points
 
         if args.task_type == 'release':

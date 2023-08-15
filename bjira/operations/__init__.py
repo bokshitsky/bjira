@@ -31,7 +31,7 @@ class BJiraOperation:
         return self.get_config()['user']
 
     def get_team(self):
-        return self.get_config()['team']
+        return self.get_config().get('team')
 
     def get_task_url(self, task_name):
         host = self.get_config()['host']
