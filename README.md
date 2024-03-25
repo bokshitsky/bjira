@@ -1,25 +1,37 @@
 
 # bjira - утилита для упрощения взаимодействия с jira из консоли
 
+## Устанавливаем (варианты)
+
+### Глобально (может не установиться без sudo, в зависимости от используемого python-а)
+
+```shell
+python -m pip install git+ssh://git@github.com/bokshitsky/bjira.git@master
+```
+
+### Через [pipx](https://github.com/pypa/pipx)
+
+```shell
+pipx install 'git+ssh://git@github.com/bokshitsky/bjira.git@master'
+```
+
+### В .venv с вызовом через simlink
+
+```shell
+python -m venv bjira_venv && bjira_venv/bin/python -m pip install 'git+ssh://git@github.com/bokshitsky/bjira.git@master'
+sudo ln -s `pwd`/bjira_venv/bin/bjira /usr/local/bin/bjira
+```
+
+### В .venv с вызовом через alias
+
+```shell
+python -m venv bjira_venv && bjira_venv/bin/python -m pip install 'git+ssh://git@github.com/bokshitsky/bjira.git@master'
+echo "alias bjira=$PWD/bjira_venv/bin/bjira" >> ~/.zshrc
+```
+
 ## Как пользоваться
 
-1. Склонировать репу.
-
-2. [Установить poetry](https://python-poetry.org/docs/)
-
-3. Установить venv и зависимости:
-
-```shell script
-poetry install
-```
-
-4. Прописать alias в .bashrc / .zshrc:
-
-```shell script
-echo 'alias bjira="'`poetry env info -p`'/bin/bjira"' >> ~/.zshrc
-```
-
-5. Добавить файл .bjira_config в home папку:
+### Добавить файл .bjira_config в home папку
 
 ```shell script
 cat <<EOF > ~/.bjira_config
@@ -31,13 +43,13 @@ cat <<EOF > ~/.bjira_config
 EOF
 ```
 
-6. Установить пароль:
+### Установить пароль
 
 ```shell script
-~ » bjira setpass
+bjira setpass
 ```
 
-7. Использовать:
+### Использовать
 
 ```shell script
 ~ » bjira create -s 'xmlback' -m 'NEW TASK NAME'            # HH задача "[xmlback] NEW TASK NAME"
