@@ -19,7 +19,7 @@ class Operation(BJiraOperation):
 
         project_search_clause = ""
         if args.search:
-            project_search_clause = f"and text ~ {args.search}"
+            project_search_clause = f"and (text ~ {args.search} or labels = {args.search})"
 
         found_issues = api.search_issues(
             f"(reporter = {user} or assignee = {user}) {project_filter_clause} {project_search_clause} ORDER BY created DESC",
