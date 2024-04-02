@@ -25,9 +25,12 @@ class Operation(BJiraOperation):
             f"(reporter = {user} or assignee = {user}) {project_filter_clause} {project_search_clause} ORDER BY created DESC",
             maxResults=args.limit,
         )
-        max_len = max(len(issue.permalink()) for issue in found_issues)
+        max_len_link = max(len(issue.permalink()) for issue in found_issues)
+        max_len_status = max(len(str(issue.fields.status)) for issue in found_issues)
         for issue in found_issues:
-            print(f"{issue.permalink().ljust(max_len)} {issue.fields.summary[:80]}")
+            print(
+                f"{str(issue.fields.status).ljust(max_len_status)} {issue.permalink().ljust(max_len_link)} {issue.fields.summary[:80]}"
+            )
 
         return MyResult(found_issues)
 
