@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "bjira"
-version = "0.8.3"
+version = "0.8.4"
 description = "hh jira helper"
 authors = ["boksh <e.bokshitskiy@hh.ru>"]
 
