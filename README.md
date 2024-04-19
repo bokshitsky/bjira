@@ -72,11 +72,13 @@ bjira setpass
 
 - » bjira create release -s 'jager-experience-indexer' -v '1.0.0'   # EXP задача "jager-experience-indexer=1.0.0"
 
-~ » bjira my                 # Показать последние задачи связанные со мной
+~ » bjira search --my                 # Показать последние задачи связанные со мной
 
-~ » bjira my 15              # Показать последние 15 задач связанных со мной
+~ » bjira search 15 --my              # Показать последние 15 задач связанных со мной
 
-~ » bjira my 10 -t HH ARCH   # Показать последние 15 HH или ARCH задач связанных со мной
+~ » bjira search 15 --my -t HH ARCH   # Показать последние 15 HH или ARCH задач связанных со мной
+
+~ » bjira search 30 --my -t HH ARCH  -st Open "In Progress"   # Показать последние 15 HH или ARCH задач связанных со мной в статусах Open или "In Progress"
 
 ~ » bjira myteam             # Показать последние задачи связанные с моей командой
 
@@ -91,4 +93,5 @@ bjira setpass
 ~ » bjira view HH-12345           # Открыть задачку или портфель в дефолтном браузере
 
 ~ » bjira view                    # Открыть задачку в браузере, имя задачки взять из ветки гит-репозитория
+
 ```
