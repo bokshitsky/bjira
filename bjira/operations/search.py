@@ -1,29 +1,42 @@
+import argparse
+
 from bjira.operations import BJiraOperation
 
 
 class Operation(BJiraOperation):
     def configure_arg_parser(self, subparsers):
-        """Удалится в пользу использования bjira search --my"""
-        parser = subparsers.add_parser("my", help="show my tasks")
+        parser = subparsers.add_parser("search", help="search tasks")
         parser.add_argument(dest="limit", type=int, default=10, help="limit", nargs="?")
         parser.add_argument("-t", "--types", nargs="+", default=[])
         parser.add_argument("-st", "--statuses", nargs="+", default=[])
         parser.add_argument("-s", dest="search", default=None)
+        parser.add_argument("-m", "--my", dest="my", action=argparse.BooleanOptionalAction)
         parser.set_defaults(func=self._execute_search)
 
     def _execute_search(self, args):
         api = self.get_jira_api()
-        user = self.get_user()
+        user = api.current_user()
 
-        project_filter_clause = ""
+        predicate = ""
+        if args.my:
+            predicate = f"(reporter = {user} or assignee = {user})"
+
         if args.types:
-            project_filter_clause = "and project in (" + ",".join(f'"{t}"' for t in args.types) + ")"
+            if predicate:
+                predicate += " and "
+            predicate += "project in (" + ",".join(f'"{t}"' for t in args.types) + ")"
 
-        project_search_clause = ""
+        if args.statuses:
+            if predicate:
+                predicate += " and "
+            predicate += "status in (" + ",".join(f'"{t}"' for t in args.statuses) + ")"
+
         if args.search:
-            project_search_clause = f"and (text ~ {args.search} or labels = {args.search})"
+            if predicate:
+                predicate += " and "
+            predicate += f"(text ~ {args.search} or labels = {args.search})"
 
-        query = f"(reporter = {user} or assignee = {user}) {project_filter_clause} {project_search_clause} ORDER BY created DESC"
+        query = f"{predicate} ORDER BY created DESC".strip()
         print(f"query: {query}")
         found_issues = api.search_issues(query, maxResults=args.limit)
         max_len_link = max(len(issue.permalink()) for issue in found_issues)
