@@ -22,7 +22,7 @@ class Operation(BJiraOperation):
         if args.task_name is not None:
             return args.task_name
         try:
-            repo = git.Repo('.')
+            repo = git.Repo('.', search_parent_directories=True)
             return repo.active_branch.name
         except git.exc.InvalidGitRepositoryError:
             print('you have to specify task_name or to be in a git-repository')
