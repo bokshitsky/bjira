@@ -22,6 +22,13 @@ python -m venv bjira_venv && bjira_venv/bin/python -m pip install 'git+ssh://git
 sudo ln -s `pwd`/bjira_venv/bin/bjira /usr/local/bin/bjira
 ```
 
+### В .venv с вызовом через simlink в локальном checkout-е репы (удобно для разработки самой bjira)
+
+```shell
+git clone git@github.com:bokshitsky/bjira.git && cd bjira && poetry install
+sudo ln -s `pwd`/.venv/bin/bjira /usr/local/bin/bjira
+```
+
 ### В .venv с вызовом через alias
 
 ```shell
