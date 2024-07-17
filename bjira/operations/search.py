@@ -8,6 +8,7 @@ class Operation(BJiraOperation):
         parser = subparsers.add_parser("search", help="search tasks")
         parser.add_argument(dest="limit", type=int, default=10, help="limit", nargs="?")
         parser.add_argument("-t", "--types", nargs="+", default=[])
+        parser.add_argument("-dt", "--devteam", nargs="+", default=[])
         parser.add_argument("-st", "--statuses", nargs="+", default=[])
         parser.add_argument("-s", dest="search", default=None)
         parser.add_argument("-m", "--my", dest="my", action=argparse.BooleanOptionalAction)
@@ -35,6 +36,11 @@ class Operation(BJiraOperation):
             if predicate:
                 predicate += " and "
             predicate += f"(text ~ {args.search} or labels = {args.search})"
+
+        if args.devteam:
+            if predicate:
+                predicate += " and "
+            predicate += '"Development Team" in (' + ",".join(f'"{t}"' for t in args.devteam) + ")"
 
         query = f"{predicate} ORDER BY created DESC".strip()
         print(f"query: {query}")
