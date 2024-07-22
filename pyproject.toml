@@ -1,13 +1,13 @@
 [tool.poetry]
 name = "bjira"
-version = "0.9.4"
+version = "1.0.0"
 description = "hh jira helper"
 authors = ["boksh <e.bokshitskiy@hh.ru>"]
 
 [tool.poetry.dependencies]
 python = "^3.8"
-keyring = "^23.7.0"
-jira = "^3.3.0"
+keyring = "^25.2.1"
+jira = "^3.8.0"
 GitPython = "^3.1.27"
 
 [tool.poetry.dev-dependencies]
