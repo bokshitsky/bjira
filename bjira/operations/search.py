@@ -27,10 +27,17 @@ class Operation(BJiraOperation):
                 predicate += " and "
             predicate += "project in (" + ",".join(f'"{t}"' for t in args.types) + ")"
 
-        if args.statuses:
+        include_statuses = [st for st in (args.statuses or []) if not st.startswith("!")]
+        if include_statuses:
             if predicate:
                 predicate += " and "
-            predicate += "status in (" + ",".join(f'"{t}"' for t in args.statuses) + ")"
+            predicate += "status in (" + ",".join(f'"{t}"' for t in include_statuses) + ")"
+
+        exclude_statuses = [st.removeprefix("!") for st in (args.statuses or []) if st.startswith("!")]
+        if exclude_statuses:
+            if predicate:
+                predicate += " and "
+            predicate += "status not in (" + ",".join(f'"{t}"' for t in exclude_statuses) + ")"
 
         if args.search:
             if predicate:
