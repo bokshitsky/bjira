@@ -1,5 +1,3 @@
-import argparse
-
 from bjira.operations import BJiraOperation
 
 
@@ -11,16 +9,20 @@ class Operation(BJiraOperation):
         parser.add_argument("-dt", "--devteam", nargs="+", default=[])
         parser.add_argument("-st", "--statuses", nargs="+", default=[])
         parser.add_argument("-s", dest="search", default=None)
-        parser.add_argument("-m", "--my", dest="my", action=argparse.BooleanOptionalAction)
+        parser.add_argument("-m", "--my", dest="my", nargs="?", default=[])
         parser.set_defaults(func=self._execute_search)
 
     def _execute_search(self, args):
         api = self.get_jira_api()
         user = api.current_user()
-
         predicate = ""
+
+        if args.my is None:  # if -m flag is set without any arguments
+            args.my = ["assignee", "reporter"]
+        if isinstance(args.my, str):
+            args.my = [args.my]
         if args.my:
-            predicate = f"(reporter = {user} or assignee = {user})"
+            predicate = "(" + " or ".join(f"{field} = {user}" for field in args.my) + ")"
 
         if args.types:
             if predicate:

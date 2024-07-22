@@ -87,6 +87,8 @@ bjira setpass
 
 ~ » bjira search 30 --my -t HH ARCH  -st Open "In Progress"   # Показать последние 15 HH или ARCH задач связанных со мной в статусах Open или "In Progress"
 
+~ » bjira search 25 -t HH -st '!closed' '!released' '!Deployed' -m assignee # Показать последние 25 HH задач назначенных на меня в статусах не closed, released, Deployed 
+
 ~ » bjira myteam             # Показать последние задачи связанные с моей командой
 
 ~ » bjira myteam 15          # Показать последние 15 задач связанных с моей командой
