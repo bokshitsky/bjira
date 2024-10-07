@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "bjira"
-version = "1.0.0"
+version = "1.1.0"
 description = "hh jira helper"
 authors = ["boksh <e.bokshitskiy@hh.ru>"]
 
@@ -21,3 +21,4 @@ bjira = 'bjira.main:main'
 
 [tool.black]
 line-length = 120
+skip-string-normalization = true
