@@ -49,6 +49,7 @@ class Operation(BJiraOperation):
         parser.add_argument('-m', dest='message', default=None, help='task name')
         parser.add_argument('-t', dest='team', default=None, help='team to assign task')
         parser.add_argument('-sp', dest='sp', default=None, help='task storypoints, example: 0.5')
+        parser.add_argument('-l', dest='labels', default=None, help='сomma-separated list of labels')
         parser.add_argument(
             '--check', dest='check', default=False, action='store_true', help='check existing task before'
         )
@@ -90,6 +91,10 @@ class Operation(BJiraOperation):
 
         if args.description:
             fields['description'] = args.description
+
+        if args.labels:
+            labels_list = [label.strip() for label in args.labels.split(',')]
+            fields['labels'] = labels_list
 
         if proj_id in (HH_PROJECT_ID, PORTFOLIO_PROJECT_ID):
             team = args.team or self.get_team()
