@@ -1,5 +1,5 @@
 from bjira.operations import BJiraOperation
-from bjira.utils import IMG_STATUS_PREFIX
+from bjira.utils import IMG_STATUS_PREFIX, STATUS_ALIASES
 
 DEFAULT_SUMMARY_LENGTH = 80
 
@@ -32,14 +32,25 @@ class Operation(BJiraOperation):
                 predicate += " and "
             predicate += "project in (" + ",".join(f'"{t}"' for t in args.types) + ")"
 
-        include_statuses = [st for st in (args.statuses or []) if not st.startswith("!")]
+        include_statuses = set([st for st in (args.statuses or []) if not st.startswith("!")])
         if include_statuses:
+            include_statuses_normalized = include_statuses
+            for alias, values in STATUS_ALIASES.items():
+                if alias in include_statuses_normalized:
+                    include_statuses.remove(alias)
+                    include_statuses.update(values)
+
             if predicate:
                 predicate += " and "
             predicate += "status in (" + ",".join(f'"{t}"' for t in include_statuses) + ")"
 
-        exclude_statuses = [st.removeprefix("!") for st in (args.statuses or []) if st.startswith("!")]
+        exclude_statuses = set([st.removeprefix("!") for st in (args.statuses or []) if st.startswith("!")])
         if exclude_statuses:
+            for alias, values in STATUS_ALIASES.items():
+                if alias in exclude_statuses:
+                    exclude_statuses.remove(alias)
+                    exclude_statuses.update(values)
+
             if predicate:
                 predicate += " and "
             predicate += "status not in (" + ",".join(f'"{t}"' for t in exclude_statuses) + ")"
@@ -57,8 +68,8 @@ class Operation(BJiraOperation):
         query = f"{predicate} ORDER BY created DESC".strip()
         print(f"query: {query}")
         found_issues = api.search_issues(query, maxResults=args.limit)
-        max_len_link = max(len(issue.permalink()) for issue in found_issues)
-        max_len_status = max(len(str(issue.fields.status)) for issue in found_issues)
+        max_len_link = max(len(issue.permalink()) for issue in found_issues) if found_issues else 0
+        max_len_status = max(len(str(issue.fields.status)) for issue in found_issues) if found_issues else 0
         for issue in found_issues:
             img = IMG_STATUS_PREFIX.get(str(issue.fields.status), '❔')
             output_line = (

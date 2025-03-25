@@ -91,6 +91,9 @@ bjira setpass
 
 ~ » bjira search 25 -t HH -st '!closed' '!released' '!Deployed' -m assignee # Показать последние 25 HH задач назначенных на меня в статусах не closed, released, Deployed
 
+~ » bjira search -m -t PORTFOLIO -st 'y' # поискать задачи у которых статус маппится в ✅ (y, v, Y, V)
+~ » bjira search -m -t PORTFOLIO -st '!y' # поискать задачи у которых статус маппится не в ✅ (y, v, Y, V)
+
 ~ » bjira search -dt sloniki      # Искать задачи для Dev Team "sloniki"
 
 ~ » bjira stas 11215              # Заполнить галочку про безопасность в PORTFOLIO-11215
