@@ -1,5 +1,7 @@
 from bjira.operations import BJiraOperation
+from bjira.utils import IMG_STATUS_PREFIX
 
+DEFAULT_SUMMARY_LENGTH = 80
 
 class Operation(BJiraOperation):
     def configure_arg_parser(self, subparsers):
@@ -10,6 +12,7 @@ class Operation(BJiraOperation):
         parser.add_argument("-st", "--statuses", nargs="+", default=[])
         parser.add_argument("-s", dest="search", default=None)
         parser.add_argument("-m", "--my", dest="my", nargs="?", default=[])
+        parser.add_argument("-tr", "--trim", dest="trim_output", type=int, default=None)
         parser.set_defaults(func=self._execute_search)
 
     def _execute_search(self, args):
@@ -57,9 +60,12 @@ class Operation(BJiraOperation):
         max_len_link = max(len(issue.permalink()) for issue in found_issues)
         max_len_status = max(len(str(issue.fields.status)) for issue in found_issues)
         for issue in found_issues:
-            print(
-                f"{str(issue.fields.status).ljust(max_len_status)} {issue.permalink().ljust(max_len_link)} {issue.fields.summary[:80]}"
+            img = IMG_STATUS_PREFIX.get(str(issue.fields.status), '❔')
+            output_line = (
+                f"{img} {str(issue.fields.status).ljust(max_len_status)} {issue.permalink().ljust(max_len_link)} {issue.fields.summary[:DEFAULT_SUMMARY_LENGTH]}"
             )
+            print(output_line[:args.trim_output])
+
 
         return MyResult(found_issues)
 
