@@ -10,6 +10,7 @@ IMG_STATUS_PREFIX = {
     'Fixed': '✅',
     'Open': '⭕️',
     'In Progress': '⭕️',
+    'In progress': '⭕️',
     'Need Review': '⭕️',
     'Backlog': '⭕️',
     'Planned Backlog': '⭕️',

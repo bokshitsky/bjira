@@ -5,7 +5,7 @@ description = "hh jira helper"
 authors = ["boksh <e.bokshitskiy@hh.ru>"]
 
 [tool.poetry.dependencies]
-python = "^3.8"
+python = "^3.9"
 keyring = "^25.2.1"
 jira = "^3.8.0"
 GitPython = "^3.1.27"
