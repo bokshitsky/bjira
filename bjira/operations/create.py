@@ -1,3 +1,5 @@
+import re
+
 from bjira.operations import BJiraOperation
 from bjira.operations.tax import DEFAULT_TAX_FIELDS
 from bjira.utils import parse_portfolio_task
@@ -16,6 +18,7 @@ TASK_MAPPING = {
     'release': ('182', 'EXP'),
 }
 
+JQL_ESCAPE_PATTERN = r'([\]\["])'
 
 def _get_project_issue_type(args):
     return TASK_MAPPING.get(args.task_type.lower())
@@ -33,6 +36,9 @@ def _get_task_message(args):
     if args.task_type == 'release':
         return f'{args.service}={args.version}'
     return _get_prefix(args) + args.message
+
+def escape_jql(jql_string: str) -> str:
+    return re.sub(JQL_ESCAPE_PATTERN, r"\\\\\1", jql_string)
 
 
 class Operation(BJiraOperation):
@@ -69,8 +75,8 @@ class Operation(BJiraOperation):
 
         if args.check:
             jira_api = self.get_jira_api()
-            escaped = task_message.replace('"', '"')
-            query = f'summary ~ "{escaped}"'
+            escaped = escape_jql(task_message)
+            query = f"""summary ~ '{escaped}'"""
             print(f'checking task {query}')
             found_issues = jira_api.search_issues(query, maxResults=10)
             for issue in found_issues:
