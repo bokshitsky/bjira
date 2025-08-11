@@ -7,6 +7,7 @@ IMG_STATUS_PREFIX = {
     'Closed': '✅',
     'Resolved': '✅',
     'Released': '✅',
+    'Deployed': '✅',
     'Fixed': '✅',
     'Open': '⭕️',
     'Reopened': '⭕️',
