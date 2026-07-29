@@ -42,6 +42,11 @@ def escape_jql(jql_string: str) -> str:
 
 
 class Operation(BJiraOperation):
+    def __init__(self):
+        super().__init__()
+        self.dryrun = None
+        self.jira_api = self.get_jira_api()
+
     def configure_arg_parser(self, subparsers):
         parser = subparsers.add_parser('create', help='create jira task')
         parser.add_argument(
@@ -71,14 +76,15 @@ class Operation(BJiraOperation):
             args.task_type == 'release' and args.service is not None and args.version is not None
         ) or args.message is not None
 
+        self.dryrun = args.dryrun
+
         task_message = _get_task_message(args)
 
         if args.check:
-            jira_api = self.get_jira_api()
             escaped = escape_jql(task_message)
             query = f"""summary ~ '{escaped}'"""
             print(f'checking task {query}')
-            found_issues = jira_api.search_issues(query, maxResults=10)
+            found_issues = self.jira_api.search_issues(query, maxResults=10)
             for issue in found_issues:
                 if issue.fields.summary.lower() == task_message.lower():
                     print(f'found existing task: {issue.permalink()} {issue.fields.summary}')
@@ -86,26 +92,46 @@ class Operation(BJiraOperation):
 
         print(f'creating task "{task_message}"')
 
-        jira_api = self.get_jira_api()
         issue_type, proj_id = _get_project_issue_type(args)
+        labels = [label.strip() for label in args.labels.split(',')] if args.labels else None
+        sp = float(args.sp) if args.sp else None
+        release = args.task_type == 'release'
+        task = self.create_task(issue_type, proj_id, task_message, args.team, args.description, labels, sp,
+                                release, args.service, args.tax)
+        if not task:
+            return None
+        print(self.get_task_url(task.key))
 
+        if args.portfolio:
+            portfolio_key = parse_portfolio_task(args.portfolio)
+            self.jira_api.create_issue_link(type='Inclusion', inwardIssue=portfolio_key, outwardIssue=task.key)
+            print(f'linked {self.get_task_url(task.key)} to {self.get_task_url(portfolio_key)}')
+
+        if args.task_type == 'release':
+            self.jira_api.transition_issue(issue=task.key, transition=MARK_AS_NOT_AUTOTESTING_TRANSITION)
+            self.jira_api.assign_issue(issue=task.key, assignee='expsvc_jira')
+
+        return CreateResult(task)
+
+
+    def create_task(self, issue_type, proj_id, task_message, team=None, description=None, labels=None,
+                    sp=None, release=False, service=None, version=None, tax=False):
         fields = {
             'project': proj_id,
             'issuetype': {'id': issue_type},
             'summary': task_message,
         }
-        if not args.team:
+        if not team:
             fields['assignee'] = {'name': self.get_user()}
 
-        if args.description:
-            fields['description'] = args.description
+        if description:
+            fields['description'] = description
 
-        if args.labels:
-            labels_list = [label.strip() for label in args.labels.split(',')]
-            fields['labels'] = labels_list
+        if labels:
+            fields['labels'] = labels
 
         if proj_id in (HH_PROJECT_ID, PORTFOLIO_PROJECT_ID):
-            team = args.team or self.get_team()
+            team = team or self.get_team()
             if team is not None:
                 # Development team
                 if proj_id == HH_PROJECT_ID:
@@ -113,30 +139,18 @@ class Operation(BJiraOperation):
                 else:
                     fields['customfield_34238'] = [{'value': team}]
 
-            fields['customfield_11212'] = float(args.sp) if args.sp else None  # Story Points
+            fields['customfield_11212'] = float(sp) if sp else None  # Story Points
 
-        if args.task_type == 'release':
-            fields['customfield_28411'] = f'{args.service}: {args.version}'  # Application
-        if args.tax:
+        if release:
+            fields['customfield_28411'] = f'{service}: {version}'  # Application
+        if tax:
             fields.update(DEFAULT_TAX_FIELDS)
 
-        if args.dryrun:
+        if self.dryrun:
             print(fields)
             return None
 
-        task = jira_api.create_issue(prefetch=True, fields=fields)
-        print(self.get_task_url(task.key))
-
-        if args.portfolio:
-            portfolio_key = parse_portfolio_task(args.portfolio)
-            jira_api.create_issue_link(type='Inclusion', inwardIssue=portfolio_key, outwardIssue=task.key)
-            print(f'linked {self.get_task_url(task.key)} to {self.get_task_url(portfolio_key)}')
-
-        if args.task_type == 'release':
-            jira_api.transition_issue(issue=task.key, transition=MARK_AS_NOT_AUTOTESTING_TRANSITION)
-            jira_api.assign_issue(issue=task.key, assignee='expsvc_jira')
-
-        return CreateResult(task)
+        return self.jira_api.create_issue(prefetch=True, fields=fields)
 
 
 class CreateResult:

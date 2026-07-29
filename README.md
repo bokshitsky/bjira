@@ -106,6 +106,7 @@ bjira setpass
 
 ~ » bjira view                    # Открыть задачку в браузере, имя задачки взять из ветки гит-репозитория
 
+~ » bjira script ~/portfolio.yaml # Запустить скрипт (создать несколько связанных задач, например, по итогам декомпозиции портфеля)
 ```
 
 ### Project-ops commands (fork extension)
@@ -133,3 +134,8 @@ bjira setpass
 **Exit codes:** `0` success, `2` arg error, `3` API error (auth/permission/not-found, ambiguous/unknown match). Pass `-v` for SDK debug logging.
 
 **Safety:** `--force` is required for `edit --description` and `edit --summary` when the existing value is non-empty. All other operations are additive or trivially reversible via Jira history.
+
+### Запуск скриптов
+
+Скрипты позволяют создать сразу несколько задач со связями (например, для декомпозиции портфеля).  Есть [пример](bjira/examples/script.yaml) скрипта (создание задач, связанных с родительской задачей) и [схема](bjira/schema/script_schema.yaml) для валидации.
+

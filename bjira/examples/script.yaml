@@ -1,0 +1,50 @@
+parent:
+  key: PORTFOLIO-100500
+  tax: false
+  link_type: includes
+issues:
+  - existing: HH-12345
+    storypoints: 1
+    label: issue0
+  - name: My First Issue
+    storypoints: 1
+    type: hh
+    service: hh.ru
+    label: issue1
+    description: Etiam laoreet quam sed arcu.
+
+  - name: My Second Issue
+    storypoints: 0.5
+    type: hh
+    service: mailer
+    label: issue2
+    description: Sed bibendum.
+    links:
+      - label: issue1
+        type: blocked by
+
+  - name: My Third Issue
+    storypoints: 2
+    type: hh
+    service: db-scheme
+    label: issue3
+    description: Donec at pede.
+    links:
+      - label: issue1
+        type: blocked by
+
+  - name: My Fourth Issue
+    storypoints: 3
+    type: hh
+    service: hh-auto-tests
+    label: issue4
+    description: Nullam eu ante vel est convallis dignissim.
+    links:
+      - label: issue0
+        type: blocked by
+      - label: issue1
+        type: blocked by
+      - label: issue2
+        type: blocked by
+  - existing: DWH-666
+    storypoints: 5
