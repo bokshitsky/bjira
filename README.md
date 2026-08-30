@@ -56,6 +56,14 @@ EOF
 bjira setpass
 ```
 
+Для доступа можно также использовать [токен](https://confluence.atlassian.com/enterprise/using-personal-access-tokens-1026032365.html)
+
+```shell script
+bjira settoken
+```
+
+Пароль и токен не хранятся одновременно — задание токена сбрасывает пароль и наоборот
+
 ### Использовать
 
 ```shell script

@@ -2,6 +2,7 @@ import re
 from collections import defaultdict
 
 JIRA_SERVICE = 'bjira'
+JIRA_TOKEN = 'bjira_token'
 
 IMG_STATUS_PREFIX = {
     'Closed': '✅',

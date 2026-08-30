@@ -4,7 +4,7 @@ from pathlib import Path
 import keyring
 from jira import JIRA
 
-from bjira.utils import JIRA_SERVICE
+from bjira.utils import JIRA_SERVICE, JIRA_TOKEN
 
 
 class BJiraOperation:
@@ -24,6 +24,9 @@ class BJiraOperation:
 
     def get_jira_api(self, **kwargs):
         user = self.get_user()
+        token = keyring.get_password(JIRA_TOKEN, user)
+        if token:
+            return JIRA(server=self.get_config()['host'], token_auth=token)
         return JIRA(server=self.get_config()['host'],
                     basic_auth=(user, keyring.get_password(JIRA_SERVICE, user)), **kwargs)
 
