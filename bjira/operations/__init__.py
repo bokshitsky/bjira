@@ -25,7 +25,7 @@ class BJiraOperation:
     def get_jira_api(self, **kwargs):
         user = self.get_user()
         return JIRA(server=self.get_config()['host'],
-                    basic_auth=(user, keyring.get_password(JIRA_SERVICE, user)), **kwargs)
+                    token_auth=keyring.get_password(JIRA_SERVICE, user), **kwargs)
 
     def get_user(self):
         return self.get_config()['user']
