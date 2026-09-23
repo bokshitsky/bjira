@@ -9,6 +9,7 @@ IMG_STATUS_PREFIX = {
     'Released': '✅',
     'Deployed': '✅',
     'Fixed': '✅',
+    'Done': '✅',
     'Open': '⭕️',
     'Reopened': '⭕️',
     'In Progress': '⭕️',
@@ -17,6 +18,10 @@ IMG_STATUS_PREFIX = {
     'Backlog': '⭕️',
     'Planned Backlog': '⭕️',
     'Rejected': '❌',
+    'Canceled': '❌',
+    'Decomposition: In progress': '⭕️',
+    'Development: In progress': '⭕️',
+    'Review': '⭕️',
 }
 
 STATUS_ALIASES = defaultdict(list)
