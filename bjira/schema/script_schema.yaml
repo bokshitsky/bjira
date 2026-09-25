@@ -1,0 +1,49 @@
+type: map
+mapping:
+  parent:
+    type: map
+    mapping:
+      key:
+        type: str
+        required: true
+      tax: {type: bool}
+      link_type:
+        type: str
+        required: true
+      storypoints: {type: number}
+  issues:
+    type: seq
+    matching: any
+    required: true
+    sequence:
+      - type: map
+        mapping:
+          existing:
+            type: str
+            required: true
+          storypoints: {type: number}
+          label: {type: str}
+          links:
+            type: seq
+            sequence:
+              - type: map
+                mapping:
+                  label: {type: str, required: true}
+                  type: {type: str, required: true}
+      - type: map
+        mapping:
+          name: {type: str, required: true}
+          storypoints: {type: number}
+          type:
+            type: str
+            required: true
+          service: {type: str}
+          label: {type: str}
+          description: {type: str}
+          links:
+            type: seq
+            sequence:
+              - type: map
+                mapping:
+                  label: {type: str, required: true}
+                  type: {type: str, required: true}
